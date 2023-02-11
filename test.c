@@ -1,59 +1,43 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/11 14:05:04 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/11 14:16:09 by yecnam           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <pthread.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
+#include <stdlib.h>
 
-void	*p_func(void *data)
+void *t_function(void *param)
 {
-	pthread_t tid;
-
-	tid = pthread_self();
-
-	char *thread_name = (char *)data;
-	for (int i = 0; i < 3; i++)
-	{
-		printf("thread name:%s, tid: %x\n", thread_name, (unsigned int)tid);
-		usleep(1000 * 1000);
-	}
-	return (0);
+    for (int i = 1; i <= 5; i++)
+    {
+        usleep(1000 * 1000 * 2); 
+        // 여기서 main쓰레드로 넘어감.
+        // main에서는 그 다음 명령이 detach이므로
+        // 그 시점에 바로 쓰레드 종료.
+        printf("쓰레드 함수 실행 중..%d/5\n",i);
+    }
+        printf("쓰레드 함수 종료\n");
+        return (void *)2147483647;
 }
 
-void	*p_func2(void *data)
+int main()
 {
-	pthread_t tid;
+    pthread_t p_thread;
+    int thr_id;
+    int result;
 
-	tid = pthread_self();
+    thr_id = pthread_create(&p_thread, NULL, t_function, NULL);
+    if (thr_id < 0)
+    {
+        perror("thread create error : ");
+        exit(0);
+    } 
+    pthread_detach(p_thread);
 
-	char *thread_name = (char *)data;
-	for (int i = 0; i < 3; i++)
+	int s = 0;
+	while (42)
 	{
-		printf("thread name:%s, tid: %x\n", thread_name, (unsigned int)tid);
-		usleep(1000 * 1000 * 1000);
+    	printf("%d초 경과\n", s++);
+    	usleep(1000 * 1000);
 	}
-	return (0);
-}
+    printf("main() 종료\n");
 
-int	main(void)
-{
-	pthread_t	pthread;
-	int id;
-	int status;
-	char p1[] = "thr_main";
-	char p2[] = "thr_2";
-
-	id = pthread_create(&pthread, 0, p_func, (void*)p2);
-	p_func2((void *)p1);
-	printf("end\n");
+    return 0;
 }

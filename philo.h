@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:03:03 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/15 20:12:48 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/15 20:57:38 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,13 @@ typedef struct s_philo
 
 typedef struct s_info
 {
-	int		argc;
-	char	**argv;
-	int		philo_num;
-	int		time_die;
-	int		time_eat;
-	int		time_sleep;
-	int		must_eat;
-	int		start_time;
+	int				philo_num;
+	int				time_die;
+	int				time_eat;
+	int				time_sleep;
+	int				must_eat;
+	int				start_time;
+	pthread_mutex_t	*fork;
 }	t_info;
 
 #endif

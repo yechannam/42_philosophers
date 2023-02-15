@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:03:03 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/12 16:45:42 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/15 20:12:48 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,15 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/time.h>
 
 typedef struct s_philo
 {
 	int	num;
+	int	right;
+	int	left;
 	int	last_eat;
+	int	count_eat;
 }	t_philo;
 
 typedef struct s_info

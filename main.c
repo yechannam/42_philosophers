@@ -6,11 +6,36 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:04:45 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/16 14:44:43 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/16 17:04:20 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+long long	ft_gettime(void)
+{
+	struct timeval	time;
+	long long		now;
+
+	gettimeofday(&time, 0);
+	now = time.tv_sec * 1000000 + time.tv_usec;
+	return (now);
+}
+
+void	print_state(t_philo philo, t_info info, char *msg)
+{
+	long long		now;
+
+	now = ft_gettime();
+	pthread_mutex_lock(&(info.print));
+	printf("%lld %d %s\n", now - info.start_time, philo.num + 1, msg);
+	pthread_mutex_unlock(&(info.print));
+}
+
+void	*threading(void *philo)
+{
+	return (0);
+}
 
 int	free_fork(t_info *info)
 {
@@ -22,6 +47,7 @@ int	free_fork(t_info *info)
 		pthread_mutex_destroy(&info->fork[i]);
 		i++;
 	}
+	pthread_mutex_destroy(&info->print);
 	free(info->fork);
 	return (-1);
 }
@@ -33,14 +59,22 @@ int	free_philo_fork(t_philo **philo, t_info *info)
 	return (-1);
 }
 
-long long	ft_gettime(void)
+void	thread_init(t_info info, t_philo *philo)
 {
-	struct timeval	time;
-	long long		now;
+	int	i;
 
-	gettimeofday(&time, 0);
-	now = time.tv_sec * 1000000 + time.tv_usec;
-	return (now);
+	i = 0;
+	while (i < info.philo_num)
+	{
+		pthread_create(&philo[i].thread, 0, threading, (void *)philo);
+		i++;
+	}
+	i = 0;
+	while (i < info.philo_num)
+	{
+		pthread_join(philo[i].thread, 0);
+		i++;
+	}
 }
 
 int	fork_init(t_info *info)
@@ -57,6 +91,7 @@ int	fork_init(t_info *info)
 		pthread_mutex_init(&info->fork[i], 0);
 		i++;
 	}
+	pthread_mutex_init(&info->print, 0);
 	return (0);
 }
 
@@ -114,7 +149,15 @@ int	main(int argc, char **argv)
 		return (free_fork(&info));
 	if (philo_init(&philo, info))
 		return (free_philo_fork(&philo, &info));
-	free_philo_fork(&philo, &info);
+	
+	while (1)
+	{
+		print_state(philo[1], info, "yes");
+		usleep(1000 * 10);
+	}
+	
+	//thread_start(info, philo);
+	//free_philo_fork(&philo, &info);
 	//atexit(leaks_check);
 	return (0);
 }

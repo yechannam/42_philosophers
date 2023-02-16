@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:03:03 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/16 16:07:21 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/16 17:01:59 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_info
 	int				must_eat;
 	long long		start_time;
 	pthread_mutex_t	*fork;
+	pthread_mutex_t	print;
 }	t_info;
 
 #endif

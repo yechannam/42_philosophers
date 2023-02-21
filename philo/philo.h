@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:03:03 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/21 18:10:03 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/21 19:46:37 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,6 @@ int			philo_init(t_philo **philo, t_info *info);
 void		*thread_ing(void *data);
 long long	ft_gettime(void);
 void		print_state(t_philo philo, t_info info, char *msg);
+void	ft_sleep(long long wait_time, t_info *info);
 
 #endif

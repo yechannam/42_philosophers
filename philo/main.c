@@ -6,28 +6,48 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:04:45 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/21 18:36:06 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/21 20:21:58 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	ft_sleep(long long wait_time, t_info *info)
+{
+	long long	start;
+	long long	now;
+
+	start = ft_gettime();
+	while (info->flag != 1)
+	{
+		now = ft_gettime();
+		if ((now - start) >= wait_time)
+			break ;
+		usleep(1);
+	}
+}
+
 void	even_fork(t_philo *philo, t_info *info)
 {
 	pthread_mutex_lock(&info->fork[philo->right]);
 	print_state(*philo, *info, "has taken a fork");
-	pthread_mutex_lock(&info->fork[philo->left]);
-	print_state(*philo, *info, "has taken a fork");
-	print_state(*philo, *info, "is eating");
-	usleep(1000 * info->time_eat);
-	philo->last_eat = ft_gettime();
-	philo->count_eat++;
-	if (philo->count_eat >= info->must_eat && philo->eating_end != 1)
+	if (info->philo_num > 1)
 	{
-		info->finish_eating++;
-		philo->eating_end = 1;
+		pthread_mutex_lock(&info->fork[philo->left]);
+		print_state(*philo, *info, "has taken a fork");
+		print_state(*philo, *info, "is eating");
+		philo->last_eat = ft_gettime();
+		printf("in fork : %lld\n", philo->last_eat);
+		ft_sleep(info->time_eat, info);
+		philo->last_eat = ft_gettime();
+		philo->count_eat++;
+		if (philo->count_eat >= info->must_eat && philo->eating_end != 1)
+		{
+			info->finish_eating++;
+			philo->eating_end = 1;
+		}
+		pthread_mutex_unlock(&info->fork[philo->left]);
 	}
-	pthread_mutex_unlock(&info->fork[philo->left]);
 	pthread_mutex_unlock(&info->fork[philo->right]);
 }
 
@@ -35,19 +55,22 @@ void	odd_fork(t_philo *philo, t_info *info)
 {
 	pthread_mutex_lock(&info->fork[philo->left]);
 	print_state(*philo, *info, "has taken a fork");
-	pthread_mutex_lock(&info->fork[philo->right]);
-	print_state(*philo, *info, "has taken a fork");
-	print_state(*philo, *info, "is eating");
-	philo->last_eat = ft_gettime();
-	usleep(1000 * info->time_eat);
-	philo->last_eat = ft_gettime();
-	philo->count_eat++;
-	if (philo->count_eat >= info->must_eat && philo->eating_end != 1)
+	if (info->philo_num > 1)
 	{
-		info->finish_eating++;
-		philo->eating_end = 1;
+		pthread_mutex_lock(&info->fork[philo->right]);
+		print_state(*philo, *info, "has taken a fork");
+		print_state(*philo, *info, "is eating");
+		philo->last_eat = ft_gettime();
+		ft_sleep(info->time_eat, info);
+		philo->last_eat = ft_gettime();
+		philo->count_eat++;
+		if (philo->count_eat >= info->must_eat && philo->eating_end != 1)
+		{
+			info->finish_eating++;
+			philo->eating_end = 1;
+		}
+		pthread_mutex_unlock(&info->fork[philo->right]);
 	}
-	pthread_mutex_unlock(&info->fork[philo->right]);
 	pthread_mutex_unlock(&info->fork[philo->left]);
 }
 
@@ -65,10 +88,10 @@ void	print_state(t_philo philo, t_info info, char *msg)
 {
 	long long		now;
 
-	now = ft_gettime();
 	if (info.flag != 1)
 	{
 		pthread_mutex_lock(&(info.print));
+		now = ft_gettime();
 		printf("%lld %d %s\n", now - info.start_time, philo.num + 1, msg);
 		pthread_mutex_unlock(&(info.print));
 	}
@@ -88,7 +111,7 @@ void	*thread_ing(void *data)
 		else
 			odd_fork(philo, info);
 		print_state(*philo, *info, "is sleeping");
-		usleep(1000 * info->time_sleep);
+		ft_sleep(info->time_sleep, info);
 		print_state(*philo, *info, "is thinking");
 	}
 	return (0);

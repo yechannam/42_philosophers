@@ -6,11 +6,37 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 14:14:06 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/21 18:35:01 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/21 20:18:55 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	check_finish(t_info *info, t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (info->flag != 1)
+	{
+		if (info->finish_eating == info->philo_num && info->must_eat != -1)
+		{
+			info->flag = 1;
+			printf("full\n");
+		}
+		i = 0;
+		while (i < info->philo_num && info-> flag != 1)
+		{
+			if (ft_gettime() - philo[i].last_eat > info->time_die)
+			{
+				printf("%lld - %lld = %lld   start time : %lld\n", ft_gettime(), philo[i].last_eat, ft_gettime() - philo[i].last_eat, info->start_time);
+				print_state(philo[i], *info, "died");
+				info->flag = 1;
+			}
+			i++;
+		}
+	}
+}
 
 void	thread_init(t_info *info, t_philo *philo)
 {
@@ -22,24 +48,7 @@ void	thread_init(t_info *info, t_philo *philo)
 		pthread_create(&philo[i].thread, 0, thread_ing, (void *)&philo[i]);
 		i++;
 	}
-	while (info->flag != 1)
-	{
-		if (info->finish_eating == info->philo_num && info->must_eat != -1)
-		{
-			info->flag = 1;
-			printf("full\n");
-		}
-		i = 0;
-		while (i < info->philo_num && info-> flag != 1)
-		{
-			if (philo[i].last_eat - info->start_time > info->time_die)
-			{
-				print_state(philo[i], *info, "died");
-				info->flag = 1;
-			}
-			i++;
-		}
-	}
+	check_finish(info, philo);
 	i = 0;
 	while (i < info->philo_num)
 		pthread_join(philo[i++].thread, 0);
@@ -95,8 +104,8 @@ int	philo_init(t_philo **philo, t_info *info)
 	while (i < info->philo_num)
 	{
 		(*philo)[i].num = i;
-		(*philo)[i].right = i;
-		(*philo)[i].left = (i + 1) % info->philo_num;
+		(*philo)[i].left = i;
+		(*philo)[i].right = (i + 1) % info->philo_num;
 		(*philo)[i].last_eat = info->start_time;
 		(*philo)[i].count_eat = 0;
 		(*philo)[i].info = info;

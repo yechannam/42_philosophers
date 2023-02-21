@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:03:03 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/21 12:05:31 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/21 18:10:03 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_info
 	int				time_sleep;
 	int				must_eat;
 	int				flag;
+	int				finish_eating;
 	long long		start_time;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
@@ -38,6 +39,7 @@ typedef struct s_philo
 	int				right;
 	int				left;
 	int				count_eat;
+	int				eating_end;
 	long long		last_eat;
 	struct s_info	*info;
 	pthread_t		thread;

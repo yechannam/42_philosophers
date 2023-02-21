@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:04:45 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/21 18:02:05 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/21 18:36:06 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	even_fork(t_philo *philo, t_info *info)
 		info->finish_eating++;
 		philo->eating_end = 1;
 	}
-	pthread_mutex_unlock(&info->fork[philo->right]);
 	pthread_mutex_unlock(&info->fork[philo->left]);
+	pthread_mutex_unlock(&info->fork[philo->right]);
 }
 
 void	odd_fork(t_philo *philo, t_info *info)
@@ -38,6 +38,7 @@ void	odd_fork(t_philo *philo, t_info *info)
 	pthread_mutex_lock(&info->fork[philo->right]);
 	print_state(*philo, *info, "has taken a fork");
 	print_state(*philo, *info, "is eating");
+	philo->last_eat = ft_gettime();
 	usleep(1000 * info->time_eat);
 	philo->last_eat = ft_gettime();
 	philo->count_eat++;
@@ -46,8 +47,8 @@ void	odd_fork(t_philo *philo, t_info *info)
 		info->finish_eating++;
 		philo->eating_end = 1;
 	}
-	pthread_mutex_unlock(&info->fork[philo->left]);
 	pthread_mutex_unlock(&info->fork[philo->right]);
+	pthread_mutex_unlock(&info->fork[philo->left]);
 }
 
 long long	ft_gettime(void)

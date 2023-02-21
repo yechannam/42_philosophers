@@ -6,7 +6,7 @@
 #    By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/27 15:53:48 by yecnam            #+#    #+#              #
-#    Updated: 2023/02/21 13:37:47 by yecnam           ###   ########.fr        #
+#    Updated: 2023/02/21 18:34:26 by yecnam           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ OBJS = $(SRCS:.c=.o)
 INC = ./
 
 CC = cc
-CFLAGS = -g #-Wall -Wextra -Werror
+CFLAGS = #-g -fsanitize=address#-Wall -Wextra -Werror
 
 all : $(NAME)
 

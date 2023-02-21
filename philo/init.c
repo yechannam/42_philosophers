@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 14:14:06 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/21 18:02:06 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/21 18:35:01 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,24 @@ void	thread_init(t_info *info, t_philo *philo)
 	while (info->flag != 1)
 	{
 		if (info->finish_eating == info->philo_num && info->must_eat != -1)
+		{
 			info->flag = 1;
+			printf("full\n");
+		}
 		i = 0;
 		while (i < info->philo_num && info-> flag != 1)
 		{
 			if (philo[i].last_eat - info->start_time > info->time_die)
 			{
-				info->flag = 1;
 				print_state(philo[i], *info, "died");
+				info->flag = 1;
 			}
 			i++;
 		}
 	}
 	i = 0;
 	while (i < info->philo_num)
-	{
-		pthread_join(philo[i].thread, 0);
-		i++;
-	}
+		pthread_join(philo[i++].thread, 0);
 }
 
 int	fork_init(t_info *info)
@@ -96,7 +96,7 @@ int	philo_init(t_philo **philo, t_info *info)
 	{
 		(*philo)[i].num = i;
 		(*philo)[i].right = i;
-		(*philo)[i].left = i % info->philo_num + 1;
+		(*philo)[i].left = (i + 1) % info->philo_num;
 		(*philo)[i].last_eat = info->start_time;
 		(*philo)[i].count_eat = 0;
 		(*philo)[i].info = info;

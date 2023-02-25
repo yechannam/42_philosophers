@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 14:14:06 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/25 19:27:03 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/25 19:47:15 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	check_finish(t_info *info, t_philo **philo)
 			printf("All philosophers have eaten enough.\n");
 			pthread_mutex_unlock(&(info->print));
 		}
-		i = 0;
-		while (i < info->philo_num && info-> flag != 1)
+		i = -1;
+		while (++i < info->philo_num && info-> flag != 1)
 		{
 			if (ft_gettime() - (*philo)[i].last_eat > info->time_die)
 			{
@@ -37,7 +37,6 @@ void	check_finish(t_info *info, t_philo **philo)
 									(*philo)[i].num + 1, "died");
 				pthread_mutex_unlock(&(info->print));
 			}
-			i++;
 		}
 	}
 }

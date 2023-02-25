@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 14:14:06 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/25 16:51:11 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/25 19:27:03 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ void	check_finish(t_info *info, t_philo **philo)
 		if (info->finish_eating == info->philo_num && info->must_eat > 0)
 		{
 			info->flag = 1;
+			pthread_mutex_lock(&(info->print));
 			printf("All philosophers have eaten enough.\n");
+			pthread_mutex_unlock(&(info->print));
 		}
 		i = 0;
 		while (i < info->philo_num && info-> flag != 1)

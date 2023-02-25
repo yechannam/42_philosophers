@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 14:09:35 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/25 14:37:55 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/25 19:35:08 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_sleep(long long wait_time)
 		now = ft_gettime();
 		if ((now - start) >= wait_time)
 			break ;
-		usleep(1);
+		usleep(10);
 	}
 }
 

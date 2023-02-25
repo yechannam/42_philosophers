@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:04:45 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/25 16:40:29 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/25 19:44:36 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	*thread_ing(void *data)
 			print_state(*philo, info, "is sleeping");
 			ft_sleep(info->time_sleep);
 			print_state(*philo, info, "is thinking");
+			usleep(100);
 		}
 		else
 			while (info->flag != 1)

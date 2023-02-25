@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 13:46:35 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/25 16:49:11 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/25 19:43:01 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	even_fork(t_philo *philo, t_info *info)
 
 void	odd_fork(t_philo *philo, t_info *info)
 {
-	usleep(1);
+	usleep(200);
 	pthread_mutex_lock(&info->fork[philo->left]);
 	print_state(*philo, info, "has taken a fork");
 	if (info->philo_num > 1)

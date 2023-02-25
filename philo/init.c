@@ -6,32 +6,34 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/18 14:14:06 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/21 20:18:55 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/25 16:51:11 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	check_finish(t_info *info, t_philo *philo)
+void	check_finish(t_info *info, t_philo **philo)
 {
 	int	i;
 
 	i = 0;
 	while (info->flag != 1)
 	{
-		if (info->finish_eating == info->philo_num && info->must_eat != -1)
+		if (info->finish_eating == info->philo_num && info->must_eat > 0)
 		{
 			info->flag = 1;
-			printf("full\n");
+			printf("All philosophers have eaten enough.\n");
 		}
 		i = 0;
 		while (i < info->philo_num && info-> flag != 1)
 		{
-			if (ft_gettime() - philo[i].last_eat > info->time_die)
+			if (ft_gettime() - (*philo)[i].last_eat > info->time_die)
 			{
-				printf("%lld - %lld = %lld   start time : %lld\n", ft_gettime(), philo[i].last_eat, ft_gettime() - philo[i].last_eat, info->start_time);
-				print_state(philo[i], *info, "died");
 				info->flag = 1;
+				pthread_mutex_lock(&(info->print));
+				printf("%lld %d %s\n", ft_gettime() - info->start_time, \
+									(*philo)[i].num + 1, "died");
+				pthread_mutex_unlock(&(info->print));
 			}
 			i++;
 		}
@@ -41,14 +43,22 @@ void	check_finish(t_info *info, t_philo *philo)
 void	thread_init(t_info *info, t_philo *philo)
 {
 	int	i;
+	int	j;
 
 	i = 0;
+	j = 0;
 	while (i < info->philo_num)
 	{
-		pthread_create(&philo[i].thread, 0, thread_ing, (void *)&philo[i]);
+		if (pthread_create(&philo[i].thread, 0, thread_ing, \
+			(void *)&philo[i]) != 0)
+		{
+			while (j < i)
+				pthread_join(philo[j++].thread, 0);
+			return ;
+		}
 		i++;
 	}
-	check_finish(info, philo);
+	check_finish(info, &philo);
 	i = 0;
 	while (i < info->philo_num)
 		pthread_join(philo[i++].thread, 0);
@@ -65,31 +75,35 @@ int	fork_init(t_info *info)
 	i = 0;
 	while (i < info->philo_num)
 	{
-		pthread_mutex_init(&info->fork[i], 0);
+		if (pthread_mutex_init(&info->fork[i], 0) != 0)
+			return (i + 1);
 		i++;
 	}
-	pthread_mutex_init(&info->print, 0);
+	if (pthread_mutex_init(&info->print, 0) != 0)
+		return (-2);
 	return (0);
 }
 
 int	info_init(int argc, char **argv, t_info *info)
 {
-	info->philo_num = atoi(argv[1]);
-	info->time_die = atoi(argv[2]);
-	info->time_eat = atoi(argv[3]);
-	info->time_sleep = atoi(argv[4]);
+	int	i;
+
+	info->philo_num = ft_atoll(argv[1]);
+	info->time_die = ft_atoll(argv[2]);
+	info->time_eat = ft_atoll(argv[3]);
+	info->time_sleep = ft_atoll(argv[4]);
 	info->start_time = ft_gettime();
 	info->flag = 0;
 	if (argc == 6)
-	{
-		info->must_eat = atoi(argv[5]);
-		if (info->must_eat < 0)
-			return (1);
-	}
+		info->must_eat = ft_atoll(argv[5]);
 	else
-		info->must_eat = -1;
-	if (fork_init(info))
-		return (1);
+		info->must_eat = 0;
+	if (info->philo_num < 0 || info->time_die < 0 || info->time_eat < 0 || \
+		info->time_sleep < 0 || info->must_eat < 0)
+		return (-1);
+	i = fork_init(info);
+	if (i)
+		return (i);
 	return (0);
 }
 

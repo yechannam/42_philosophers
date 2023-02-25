@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:03:03 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/21 19:46:37 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/25 16:20:03 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,19 @@ typedef struct s_philo
 	pthread_t		thread;
 }	t_philo;
 
-int			free_fork(t_info *info);
+int			free_fork(t_info *info, int max);
 int			free_philo_fork(t_philo **philo, t_info *info);
+int			free_print(t_info *info);
 void		thread_init(t_info *info, t_philo *philo);
 int			fork_init(t_info *info);
 int			info_init(int argc, char **argv, t_info *info);
 int			philo_init(t_philo **philo, t_info *info);
 void		*thread_ing(void *data);
 long long	ft_gettime(void);
-void		print_state(t_philo philo, t_info info, char *msg);
-void	ft_sleep(long long wait_time, t_info *info);
+void		print_state(t_philo philo, t_info *info, char *msg);
+void		ft_sleep(long long wait_time);
+void		even_fork(t_philo *philo, t_info *info);
+void		odd_fork(t_philo *philo, t_info *info);
+long long	ft_atoll(const char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:04:45 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/28 14:19:27 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/28 15:42:40 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,17 @@ void	*thread_ing(void *data)
 	while (info->flag != 1)
 	{
 		if (philo->num % 2 == 0)
-			even_fork(philo, info);
-		else
 			odd_fork(philo, info);
+		else
+			even_fork(philo, info);
 		if (info->philo_num > 1)
 		{
 			print_state(*philo, info, "is sleeping");
 			ft_sleep(info->time_sleep, info);
 			print_state(*philo, info, "is thinking");
 			usleep(100);
+			if (info->philo_num % 2)
+				ft_sleep(info->time_eat - info->time_sleep, info);
 		}
 		else
 			while (info->flag != 1)

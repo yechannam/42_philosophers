@@ -6,13 +6,13 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 14:09:35 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/25 19:35:08 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/28 14:20:21 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_sleep(long long wait_time)
+void	ft_sleep(long long wait_time, t_info *info)
 {
 	long long	start;
 	long long	now;
@@ -21,9 +21,12 @@ void	ft_sleep(long long wait_time)
 	while (1)
 	{
 		now = ft_gettime();
-		if ((now - start) >= wait_time)
+		if ((now - start) >= wait_time & info->start_time > 0)
+		{
+			info->start_time += (now - start) - wait_time;
 			break ;
-		usleep(10);
+		}
+		usleep(100);
 	}
 }
 

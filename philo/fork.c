@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 13:46:35 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/25 19:46:02 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/02/28 14:19:13 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	even_fork(t_philo *philo, t_info *info)
 		print_state(*philo, info, "has taken a fork");
 		print_state(*philo, info, "is eating");
 		philo->last_eat = ft_gettime();
-		ft_sleep(info->time_eat);
+		ft_sleep(info->time_eat, info);
 		philo->count_eat++;
 		if (philo->count_eat >= info->must_eat && philo->eating_end != 1)
 		{
-			info->finish_eating++;
+			info->finish_eating = info->finish_eating + 1;
 			philo->eating_end = 1;
 		}
 		pthread_mutex_unlock(&info->fork[philo->left]);
@@ -45,7 +45,7 @@ void	odd_fork(t_philo *philo, t_info *info)
 		print_state(*philo, info, "has taken a fork");
 		print_state(*philo, info, "is eating");
 		philo->last_eat = ft_gettime();
-		ft_sleep(info->time_eat);
+		ft_sleep(info->time_eat, info);
 		philo->count_eat++;
 		if (philo->count_eat >= info->must_eat && philo->eating_end != 1)
 		{

@@ -6,13 +6,13 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 14:09:35 by yecnam            #+#    #+#             */
-/*   Updated: 2023/02/28 15:41:50 by yecnam           ###   ########.fr       */
+/*   Updated: 2023/03/01 19:32:52 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_sleep(long long wait_time, t_info *info)
+void	ft_sleep(long long wait_time)
 {
 	long long	start;
 	long long	now;
@@ -23,11 +23,8 @@ void	ft_sleep(long long wait_time, t_info *info)
 	while (1)
 	{
 		now = ft_gettime();
-		if ((now - start) >= wait_time & info->start_time > 0)
-		{
-			info->start_time += (now - start) - wait_time;
+		if ((now - start) >= wait_time)
 			break ;
-		}
 		usleep(100);
 	}
 }
@@ -42,18 +39,17 @@ long long	ft_gettime(void)
 	return (now);
 }
 
-void	print_state(t_philo philo, t_info *info, char *msg)
+void	print_state(t_philo philo, char *msg)
 {
 	long long		now;
 
-	if (info->flag != 1)
-	{
-		pthread_mutex_lock(&(info->print));
-		now = ft_gettime();
-		if (info->flag != 1)
-			printf("%lld %d %s\n", now - info->start_time, philo.num + 1, msg);
-		pthread_mutex_unlock(&(info->print));
-	}
+	pthread_mutex_lock(&(philo.data->print));
+	now = ft_gettime();
+	pthread_mutex_lock(&(philo.data->flag));
+	if (!(philo.data->end))
+		printf("%lld %d %s\n", now - philo.info.start_time, philo.num + 1, msg);
+	pthread_mutex_unlock(&(philo.data->flag));
+	pthread_mutex_unlock(&(philo.data->print));
 }
 
 long long	ft_atoll(const char *str)

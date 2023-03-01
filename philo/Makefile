@@ -6,7 +6,7 @@
 #    By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/27 15:53:48 by yecnam            #+#    #+#              #
-#    Updated: 2023/02/28 14:25:48 by yecnam           ###   ########.fr        #
+#    Updated: 2023/03/01 20:23:17 by yecnam           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ OBJS = $(SRCS:.c=.o)
 INC = ./
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=thread
 
 all : $(NAME)
 
